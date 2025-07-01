@@ -187,10 +187,18 @@ uploaded_file = st.file_uploader("Upload a file", type=["pdf", "docx", "txt", "c
 # Upload to backend
 if uploaded_file is not None:
     with st.spinner("Uploading..."):
-        res = requests.post(
-    "https://ai-doc-assistant-34ml.onrender.com/upload/",
-    files={"file": (uploaded_file.name, uploaded_file.read(), uploaded_file.type)}
-)
+        try:
+            res = requests.post(
+            "https://ai-doc-assistant-34ml.onrender.com/upload/",
+            files={"file": (uploaded_file.name, uploaded_file.read(), uploaded_file.type)},
+            timeout=60
+    )
+            if res.status_code == 200:
+                st.success("Document uploaded successfully!")
+            else:
+                st.error(f"❌ Upload failed: {res.text}")
+        except requests.exceptions.RequestException as e:
+            st.error(f"🚨 Upload failed due to connection issue: {e}")
 
 
         
@@ -210,10 +218,13 @@ if st.button("Ask AI"):
         st.warning("Type a question to get started.")
     else:
         with st.spinner("Generating answer..."):
-            res = requests.post("https://ai-doc-assistant-34ml.onrender.com/ask/", data={"question": question})
+            try:
+                res = requests.post("https://ai-doc-assistant-34ml.onrender.com/ask/", data={"question": question}, timeout=60)
+                if res.status_code == 200:
+                    answer = res.json()["answer"]
+                    st.markdown(f'<div class="box answer">{answer}</div>', unsafe_allow_html=True)
+                else:
+                    st.error(f"❌ Error: {res.text}")
+            except requests.exceptions.RequestException as e:
+                st.error(f"❌ Failed to connect to backend: {e}")
 
-            if res.status_code == 200:
-                answer = res.json()["answer"]
-                st.markdown(f'<div class="box answer">{answer}</div>', unsafe_allow_html=True)
-            else:
-                st.error(f"❌ Error: {res.text}")

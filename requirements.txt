@@ -1,0 +1,10 @@
+pdfplumber
+python-docx
+pandas
+openpyxl
+sentence-transformers
+faiss-cpu
+openai
+langchain
+fastapi
+uvicorn

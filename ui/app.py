@@ -187,7 +187,11 @@ uploaded_file = st.file_uploader("Upload a file", type=["pdf", "docx", "txt", "c
 # Upload to backend
 if uploaded_file is not None:
     with st.spinner("Uploading..."):
-        res = requests.post("https://ai-doc-assistant-34ml.onrender.com/upload/", files={"file": uploaded_file})
+        res = requests.post(
+    "https://ai-doc-assistant-34ml.onrender.com/upload/",
+    files={"file": (uploaded_file.name, uploaded_file.read(), uploaded_file.type)}
+)
+
 
         
         if res.status_code == 200:

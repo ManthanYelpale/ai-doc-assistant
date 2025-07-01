@@ -9,3 +9,4 @@ langchain
 fastapi
 uvicorn
 python-pptx
+google-generativeai

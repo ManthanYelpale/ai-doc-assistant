@@ -11,3 +11,4 @@ uvicorn
 python-pptx
 google-generativeai
 python-multipart
+requests

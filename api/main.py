@@ -2,6 +2,7 @@ from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.responses import JSONResponse
 import os
 import shutil
+import traceback  # ✅ Added for full error logging
 
 from app.embed import run_embedding_pipeline
 from app.search import load_faiss_index, load_chunks, search_query, answer_question
@@ -15,8 +16,7 @@ INDEX_FILE = "vectors/index.faiss"
 @app.post("/upload/")
 async def upload_pdf(file: UploadFile = File(...)):
     try:
-        os.makedirs(UPLOAD_DIR, exist_ok=True)  # Ensure directory exists
-
+        os.makedirs(UPLOAD_DIR, exist_ok=True)
         file_location = os.path.join(UPLOAD_DIR, file.filename)
 
         with open(file_location, "wb") as buffer:
@@ -31,9 +31,13 @@ async def upload_pdf(file: UploadFile = File(...)):
         }
 
     except Exception as e:
+        # ✅ Print full traceback in logs
+        error_details = traceback.format_exc()
+        print("Upload Error:\n", error_details)
+
         return JSONResponse(status_code=500, content={
             "error": str(e),
-            "message": "Failed to upload or process the file."
+            "details": error_details
         })
 
 

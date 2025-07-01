@@ -187,10 +187,9 @@ uploaded_file = st.file_uploader("Upload a file", type=["pdf", "docx", "txt", "c
 # Upload to backend
 if uploaded_file is not None:
     with st.spinner("Uploading..."):
-        res = requests.post(
-            "http://127.0.0.1:8000/upload/",
-            files={"file": uploaded_file}
-        )
+        res = requests.post("https://ai-doc-assistant-34ml.onrender.com/upload/", files={"file": uploaded_file})
+
+        
         if res.status_code == 200:
             st.success(" Document uploaded successfully!")
         else:
@@ -207,7 +206,8 @@ if st.button("Ask AI"):
         st.warning("Type a question to get started.")
     else:
         with st.spinner("Generating answer..."):
-            res = requests.post("http://127.0.0.1:8000/ask/", data={"question": question})
+            res = requests.post("https://ai-doc-assistant-34ml.onrender.com/ask/", data={"question": question})
+
             if res.status_code == 200:
                 answer = res.json()["answer"]
                 st.markdown(f'<div class="box answer">{answer}</div>', unsafe_allow_html=True)

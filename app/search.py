@@ -3,9 +3,11 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 from app.embed import chunk_text
 import google.generativeai as genai
+import os
 
 # Gemini API key
-genai.configure(api_key="AIzaSyAivjpLmnl_hYUq7rNSdHkEwYNRqrBIxoU")  # 🔁 Replace with your actual Gemini key
+api_key = os.getenv("AIzaSyAivjpLmnl_hYUq7rNSdHkEwYNRqrBIxoU")
+genai.configure(api_key="AIzaSyAivjpLmnl_hYUq7rNSdHkEwYNRqrBIxoU")  #  Replace with your actual Gemini key
 
 # Load Gemini model
 model = genai.GenerativeModel("models/gemini-1.5-flash")
